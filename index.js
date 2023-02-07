@@ -44,7 +44,7 @@ app.post('/send-verification', async (req, res) => {
   app.post('/verify-otp', async (req, res) => {
     const check = await client.verify.services(process.env.VERIFY_SERVICE_SID)
       .verificationChecks
-      .create({to: `+${req.body.phoneNumber}`, code: '612762'})
+      .create({to: `+${req.body.phoneNumber}`, code: req.body.otp})
       .catch(e => {
         console.log(e)
         res.status(500).send(e);
