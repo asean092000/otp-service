@@ -6,13 +6,20 @@ async function hashPassword(plaintextPassword) {
 }
 
 // compare password
-
 async function comparePassword(plaintextPassword, hash) {
     return await await bcrypt.compare(plaintextPassword, hash);
 }
 
+function whitelist(validIps, ip) {
+    if(validIps.includes(ip)){
+        return true;
+    }
+
+    return false;
+}
 
 module.exports = {
     hashPassword,
-    comparePassword
+    comparePassword,
+    whitelist
 }

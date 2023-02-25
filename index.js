@@ -9,6 +9,11 @@ const client = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWI
 const app = express();
 const port = process.env.PORT || 3000;
 app.use(cors());
+let validIps = ['210.24.209.42', '::1', '13.212.171.253', '13.214.205.82'];
+
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'pug');
 
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -17,16 +22,23 @@ app.use(bodyParser.json());
  // Authorization
  app.use('', async (req, res, next) => {
   let result = false;
+  const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress 
+  const allow = Verify.whitelist(validIps, ip)
+
   if (req.headers.authorization) {
       result = await Verify.comparePassword(process.env.KEY, req.headers.authorization)
   }
   
-  if (result) {
+  if (allow) {
       next();
   } else {
       res.sendStatus(403);
   }
 });
+
+app.get('/', (req, res )=>{
+  res.send("authenticated");
+})
 
 app.post('/send-verification', async (req, res) => {
   await client.verify.services(process.env.VERIFY_SERVICE_SID)
