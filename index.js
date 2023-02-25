@@ -29,7 +29,7 @@ app.use(bodyParser.json());
       result = await Verify.comparePassword(process.env.KEY, req.headers.authorization)
   }
   
-  if (allow) {
+  if (allow && result) {
       next();
   } else {
       res.sendStatus(403);
