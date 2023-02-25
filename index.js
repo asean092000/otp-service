@@ -9,7 +9,7 @@ const client = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWI
 const app = express();
 const port = process.env.PORT || 3000;
 app.use(cors());
-let validIps = ['210.24.209.42', '::1', '13.212.171.253', '13.214.205.82'];
+let validIps = ['210.24.209.42', '::1', '13.212.171.253', '13.214.205.82', '::ffff:127.0.0.1'];
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
