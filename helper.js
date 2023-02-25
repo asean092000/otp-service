@@ -7,10 +7,12 @@ async function hashPassword(plaintextPassword) {
 
 // compare password
 async function comparePassword(plaintextPassword, hash) {
+    console.log(hash)
     return await await bcrypt.compare(plaintextPassword, hash);
 }
 
 function whitelist(validIps, ip) {
+    console.log(ip)
     if(validIps.includes(ip)){
         return true;
     }

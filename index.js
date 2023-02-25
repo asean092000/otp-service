@@ -30,6 +30,8 @@ app.use(bodyParser.json());
   }
   
   if (allow && result) {
+      console.log(allow)
+      console.log(result)
       next();
   } else {
       res.sendStatus(403);
