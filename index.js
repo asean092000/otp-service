@@ -47,9 +47,8 @@ app.post('/send-verification', async (req, res) => {
       .verifications
       .create({to: `+${req.body.phoneNumber}`, channel: 'sms'})
       .then(verification => console.log(verification.status))
-      .catch(e => {
-        console.log(e)
-        res.status(500).send(e);
+      .catch(err => {
+        return err;
       });
   
     res.sendStatus(200);
@@ -59,9 +58,8 @@ app.post('/send-verification', async (req, res) => {
     const check = await client.verify.services(process.env.VERIFY_SERVICE_SID)
       .verificationChecks
       .create({to: `+${req.body.phoneNumber}`, code: req.body.otp})
-      .catch(e => {
-        console.log(e)
-        res.status(500).send(e);
+      .catch(err => {
+        return err;
       });
   
     res.status(200).send(check);
