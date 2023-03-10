@@ -30,11 +30,9 @@ app.use(bodyParser.json());
   }
   
   if (allow && result) {
-      console.log(allow)
-      console.log(result)
       next();
   } else {
-      res.sendStatus(403);
+      res.sendStatus(403).end();
   }
 });
 
@@ -43,26 +41,29 @@ app.get('/', (req, res )=>{
 })
 
 app.post('/send-verification', async (req, res) => {
-  await client.verify.services(process.env.VERIFY_SERVICE_SID)
-      .verifications
-      .create({to: `+${req.body.phoneNumber}`, channel: 'sms'})
-      .then(verification => console.log(verification.status))
-      .catch(err => {
-        return err;
-      });
-  
-    res.sendStatus(200);
+    try {
+      await client.verify.services(process.env.VERIFY_SERVICE_SID)
+        .verifications
+        .create({to: `+${req.body.phoneNumber}`, channel: 'sms'})
+
+      res.sendStatus(200).end();
+    } catch (error) {
+      res.status(500)
+        .send(JSON.stringify(error))
+    }
   });
 
   app.post('/verify-otp', async (req, res) => {
-    const check = await client.verify.services(process.env.VERIFY_SERVICE_SID)
+    try {
+      const check = await client.verify.services(process.env.VERIFY_SERVICE_SID)
       .verificationChecks
       .create({to: `+${req.body.phoneNumber}`, code: req.body.otp})
-      .catch(err => {
-        return err;
-      });
   
     res.status(200).send(check);
+    } catch (error) {
+      res.status(500)
+        .send(JSON.stringify(error))
+    }
   });
 
 // catch 404 and forward to error handler
